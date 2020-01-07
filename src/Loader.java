@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.concurrent.ForkJoinPool;
 
 public class Loader
 {
@@ -13,8 +14,9 @@ public class Loader
         BufferedWriter writer = new BufferedWriter(fileWriter);
 
 
-        for (int regionCode = 1; regionCode < 100; regionCode++) {
-            Generator.numbersGenerator(regionCode);
+        for (int regionCode = 1; regionCode < 10; regionCode++) {
+            new ForkJoinPool().invoke(new Generator(writer, regionCode));
+
         }
         writer.flush();
         writer.close();

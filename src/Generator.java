@@ -1,22 +1,36 @@
-public class Generator {
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.concurrent.RecursiveTask;
 
+public class Generator extends RecursiveTask<> {
+
+    private static BufferedWriter writer = new BufferedWriter(new FileWriter("res/numbers.txt"));
     private static char letters[] = {'У', 'К', 'Е', 'Н', 'Х', 'В', 'А', 'Р', 'О', 'С', 'М', 'Т'};
+    private BufferedWriter writer;
+    private int regionCode;
 
-    public static String numbersGenerator(int regionCode) {
-        StringBuffer buffer = null;
+    public Generator(BufferedWriter writer, int regionCode) {
+        this.writer = writer;
+        this.regionCode = regionCode;
+    }
+
+    @Override
+    protected void compute() {
         for (int number = 1; number < 1000; number++) {
-            StringBuilder builder = new StringBuilder();
-            buffer = new StringBuffer();
             for (char firstLetter : letters) {
                 for (char secondLetter : letters) {
                     for (char thirdLetter : letters) {
-                        builder.append(firstLetter);
-                        builder.append(padNumber(number, 3));
-                        builder.append(secondLetter);
-                        builder.append(thirdLetter);
-                        builder.append(padNumber(regionCode, 2));
-                        builder.append("\n");
-
+                        try {
+                            writer.write(firstLetter);
+                            writer.write(padNumber(number, 3));
+                            writer.write(secondLetter);
+                            writer.write(thirdLetter);
+                            writer.write(padNumber(regionCode, 2));
+                            writer.write("\n");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
