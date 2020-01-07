@@ -1,41 +1,43 @@
 import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.concurrent.RecursiveTask;
 
-public class Generator extends RecursiveTask<> {
+public class Generator {
 
-    private static BufferedWriter writer = new BufferedWriter(new FileWriter("res/numbers.txt"));
-    private static char letters[] = {'У', 'К', 'Е', 'Н', 'Х', 'В', 'А', 'Р', 'О', 'С', 'М', 'Т'};
     private BufferedWriter writer;
-    private int regionCode;
+    private static char letters[] = {'У', 'К', 'Е', 'Н', 'Х', 'В', 'А', 'Р', 'О', 'С', 'М', 'Т'};
+    private int regionCodeStart;
+    private int regionCodeEnd;
 
-    public Generator(BufferedWriter writer, int regionCode) {
+    public Generator(BufferedWriter writer, int regionCodeStart, int regionCodeEnd) {
         this.writer = writer;
-        this.regionCode = regionCode;
+        this.regionCodeStart = regionCodeStart;
+        this.regionCodeEnd = regionCodeEnd;
     }
 
-    @Override
     protected void compute() {
-        for (int number = 1; number < 1000; number++) {
-            for (char firstLetter : letters) {
-                for (char secondLetter : letters) {
-                    for (char thirdLetter : letters) {
-                        try {
-                            writer.write(firstLetter);
-                            writer.write(padNumber(number, 3));
-                            writer.write(secondLetter);
-                            writer.write(thirdLetter);
-                            writer.write(padNumber(regionCode, 2));
-                            writer.write("\n");
-                        } catch (IOException e) {
-                            e.printStackTrace();
+        StringBuilder stringBuilder;
+        for (int regionCode = regionCodeStart + 1; regionCode <= regionCodeStart + regionCodeEnd; regionCode++) {
+            for (int number = 1; number < 1000; number++) {
+                for (char firstLetter : letters) {
+                    for (char secondLetter : letters) {
+                        for (char thirdLetter : letters) {
+                            try {
+                                stringBuilder = new StringBuilder();
+                                stringBuilder.append(firstLetter)
+                                        .append(padNumber(number, 3))
+                                        .append(secondLetter)
+                                        .append(thirdLetter)
+                                        .append(padNumber(regionCode, 3))
+                                        .append("\n");
+                                writer.write(stringBuilder.toString());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }
             }
         }
-        return buffer.toString();
     }
 
     private static String padNumber(int number, int numberLength)
